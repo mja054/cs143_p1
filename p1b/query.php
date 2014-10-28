@@ -25,8 +25,10 @@
   {
     $db_connection = connectDB();
     $user_query = $_GET["query"];
-    $sanitized_name = mysql_real_escape_string($user_query, $db_connection);
-    $rs = mysql_query($sanitized_name, $db_connection);
+    $rs = mysql_query($user_query, $db_connection);
+    if (!$rs) {
+       die('Invalid query: ' . mysql_error());
+    }
 
     print "<h3>Results from MySQL:</h3>";
     print "<table border=1 cellspacing=1 cellpadding=2>";
@@ -42,7 +44,11 @@
       print "<tr align=center>";
       foreach ($row as $rv) {
         print "<td>";
-        print $rv;
+	if ($rv == "") {
+	  print "N/A";
+	} else {
+	  print $rv;
+	}
 	print "</td>";
       }
       print "</tr>";
