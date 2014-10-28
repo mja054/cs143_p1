@@ -8,9 +8,8 @@
 ?>
 
 <form action="query.php" method="GET">
-<textarea name="query" rows="5" cols="40"><?php echo $_GET["query"];?></textarea><br>
+<textarea name="query" rows="8" cols="60"><?php echo $_GET["query"];?></textarea>
 <input type = "submit" name = "submit">
-<input type = "reset" name = "reset">
 </form>
 
 <?php
@@ -23,11 +22,20 @@
 
   function execute_command()
   {
-    $db_connection = connectDB();
+    $input_pattern = '/^(select|show)/i';
     $user_query = $_GET["query"];
+
+    if ($user_query == '') {
+      die();
+    } else if (!preg_match($input_pattern, $user_query)) {
+      die('<h4>Only select/show commands are supported.</h4>');
+    }
+
+    $db_connection = connectDB();
+
     $rs = mysql_query($user_query, $db_connection);
     if (!$rs) {
-       die('Invalid query: ' . mysql_error());
+       die('<h4>Invalid query: ' . mysql_error() . '</h4>');
     }
 
     print "<h3>Results from MySQL:</h3>";
@@ -58,7 +66,6 @@
   }
 
   if (isset($_GET["submit"])) {
-     print $_GET["query"] . "<br />";
      execute_command();
   }
 ?>
