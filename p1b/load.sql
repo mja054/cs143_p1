@@ -1,11 +1,13 @@
 -- Empties tables before loading
-TRUNCATE TABLE Movie;
-TRUNCATE TABLE Actor;
-TRUNCATE TABLE Director;
 TRUNCATE TABLE MovieGenre;
 TRUNCATE TABLE MovieDirector;
 TRUNCATE TABLE MovieActor;
 TRUNCATE TABLE Review;
+TRUNCATE TABLE Movie;
+TRUNCATE TABLE Actor;
+TRUNCATE TABLE Director;
+TRUNCATE TABLE MaxMovieID;
+TRUNCATE TABLE MaxPersonID;
 
 -- Loads data from ~/data
 LOAD DATA LOCAL INFILE '~/data/movie.del' IGNORE INTO TABLE Movie
