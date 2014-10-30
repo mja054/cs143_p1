@@ -10,5 +10,8 @@ FROM (SELECT aid
 	  GROUP BY aid
 	  HAVING COUNT(aid) > 1) AS A;
 
--- ????
--- TODO: WRITE ANOTHER QUERY
+-- Print the id's and titles of movies in which the directors
+-- were also the Actors of the movie.
+SELECt id, title
+FROM Movie M, MovieDirector MD, MovieActor MA
+WHERE M.id = MD.mid AND M.id = MA.mid AND MD.did = MA.aid;
