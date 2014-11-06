@@ -19,13 +19,7 @@ Please select one:
 
 
 <?php
-  function connectDB()
-  {
-    $db_connection = mysql_connect("localhost","cs143", "");
-    mysql_select_db("CS143", $db_connection);
-    return $db_connection;
-  }
-
+  include "db_base.php";
   function execute_command()
   {
     $actDir = $_GET["actDir"];
@@ -40,18 +34,18 @@ Please select one:
       $dod = "NULL";
     }
 
-    $db_connection = connectDB();
+    $db_con = new dbConnect();
 
     # Obtaining the current max ID
     $newIDquery = "SELECT id FROM MaxPersonID";
-    $queryMaxID = mysql_query($newIDquery, $db_connection);
-    while ($row = mysql_fetch_row($queryMaxID)) {
+    $queryMaxID = $db_con->execute_command($newIDquery);
+    while ($row = $db_con->fetch_row($queryMaxID)) {
       $newID = $row[0];
     }
 
     # Updating the max ID
     $updateMaxIDquery = "UPDATE MaxPersonID SET id=id+1";
-    $updateMaxID = mysql_query($updateMaxIDquery, $db_connection);
+    $updateMaxID = $db_con->execute_command($updateMaxIDquery);
 
     if ($actDir == "Actor") {
       $insert_query = "INSERT INTO Actor VALUES($newID, '$last', '$first', '$sex', $dob, $dod)";
@@ -59,18 +53,20 @@ Please select one:
     else if ($actDir == "Director") {
       $insert_query = "INSERT INTO Director VALUES($newID, '$last', '$first', $dob, $dod)";
     }
-    $insertDB = mysql_query($insert_query, $db_connection);
+    
+    $insertDB = $db_con->execute_command($insert_query);
+
     if (!$insertDB) {
       $error = mysql_error();
       $updateMaxIDquery = "UPDATE MaxPersonID SET id=id-1";
-      $updateMaxID = mysql_query($updateMaxIDquery, $db_connection);
+      $updateMaxID = $db_con->execute_command($updateMaxIDquery);
       die("Invalid query: $error");
     }
     else {
       print "Successfully inserted $first $last into the $actDir database!";
     }
 
-    mysql_close($db_connection);
+    $db_con->close_db();
   }
 
   if (isset($_GET["submit"])) {
