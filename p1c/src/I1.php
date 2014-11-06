@@ -59,13 +59,15 @@ Please select one:
     else if ($actDir == "Director") {
       $insert_query = "INSERT INTO Director VALUES($newID, '$last', '$first', $dob, $dod)";
     }
-    print "$insert_query <br>";
     $insertDB = mysql_query($insert_query, $db_connection);
     if (!$insertDB) {
       $error = mysql_error();
       $updateMaxIDquery = "UPDATE MaxPersonID SET id=id-1";
       $updateMaxID = mysql_query($updateMaxIDquery, $db_connection);
       die("Invalid query: $error");
+    }
+    else {
+      print "Successfully inserted $first $last into the $actDir database!";
     }
 
     mysql_close($db_connection);
