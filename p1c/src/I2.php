@@ -67,14 +67,14 @@ Genre :
     print "<h3>Results from MySQL:</h3>";
     print "<table border=1 cellspacing=1 cellpadding=2>";
     print "<tr align=center>";
-    for ($i = 0; $i < mysql_num_fields($rs); $i++) {
+    for ($i = 0; $i < $db_con->get_num_fields($rs); $i++) {
         print "<td>";
-        print mysql_field_name($rs, $i);
+        print $db_con->get_field_name($rs, $i);
 	print "</td>";
     }
     print "</tr>";
 
-    while ($row = mysql_fetch_row($rs)) {
+    while ($row = $db_con->fetch_row($rs)) {
       print "<tr align=center>";
       foreach ($row as $rv) {
         print "<td>";

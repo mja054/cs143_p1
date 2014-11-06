@@ -11,16 +11,27 @@ class dbConnect {
        function execute_command($command)
        {
 	     $rs = mysql_query($command, $this->db_connection);
-	     if (!$rs) {
-		   die('<h4>Invalid query: ' . mysql_error() . '</h4>');
-	     }
 	     return $rs;
+       }
+
+       function get_num_fields($rs)
+       {
+           return mysql_num_fields($rs);
+       }
+
+       function get_field_name($rs, $index)
+       {
+           return mysql_field_name($rs, $index);
+       }
+
+       function fetch_row($rs)
+       {
+           return mysql_fetch_row($rs);
        }
 
        function close_db()
        {
 	    mysql_close($this->db_connection);
        }
-
 }
 ?>
