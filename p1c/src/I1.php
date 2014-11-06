@@ -4,13 +4,19 @@
 <body>
 <h1>Add a new actor or director here!</h1>
 
-<?php
-?>
-
-<form action="query.php" method="GET">
-<textarea name="query" rows="8" cols="60"><?php echo $_GET["query"];?></textarea>
-<input type = "submit" name = "submit">
+Please select one:
+<form action="I1.php" method="GET">
+  Actor <input type="radio" name="actDir" value="Actor" <?php if($_GET["actDir"] == "Actor") {echo 'checked="checked"';} ?> >
+  Director <input type="radio" name="actDir" value="Director" <?php if($_GET["actDir"] == "Director") {echo 'checked="checked"';} ?> ><br>
+  First name: <textarea name="first" rows="1" cols="6"><?php echo $_GET["first"];?></textarea>
+  Last name: <textarea name="last" rows="1" cols="6"><?php echo $_GET["last"];?></textarea><br>
+  Male <input type="radio" name="sex" value="Male" <?php if($_GET["sex"] == "Male") {echo 'checked="checked"';} ?>>
+  Female <input type="radio" name="sex" value="Female" <?php if($_GET["sex"] == "Female") {echo 'checked="checked"';} ?>> <br>
+  Date of Birth: <textarea name="dob" rows="1" cols="6"><?php echo $_GET["dob"];?></textarea>
+  Date of Death: <textarea name="dod" rows="1" cols="6"><?php echo $_GET["dod"];?></textarea><br>
+  <input type = "submit" name = "submit">
 </form>
+
 
 <?php
   function connectDB()
@@ -22,46 +28,46 @@
 
   function execute_command()
   {
-    $input_pattern = '/^(select|show)/i';
-    $user_query = $_GET["query"];
+    $actDir = $_GET["actDir"];
+    $first = $_GET["first"];
+    $last = $_GET["last"];
+    $sex = $_GET["sex"];
+    $dob = $_GET["dob"];
+    $dod = $_GET["dod"];
 
-    if ($user_query == '') {
-      die();
-    } else if (!preg_match($input_pattern, $user_query)) {
-      die('<h4>Only select/show commands are supported.</h4>');
+    # If dod is empty, we assume the person is still alive
+    if ($dod == "") {
+      $dod = "NULL";
     }
 
     $db_connection = connectDB();
 
-    $rs = mysql_query($user_query, $db_connection);
-    if (!$rs) {
-       die('<h4>Invalid query: ' . mysql_error() . '</h4>');
+    # Obtaining the current max ID
+    $newIDquery = "SELECT id FROM MaxPersonID";
+    $queryMaxID = mysql_query($newIDquery, $db_connection);
+    while ($row = mysql_fetch_row($queryMaxID)) {
+      $newID = $row[0];
     }
 
-    print "<h3>Results from MySQL:</h3>";
-    print "<table border=1 cellspacing=1 cellpadding=2>";
-    print "<tr align=center>";
-    for ($i = 0; $i < mysql_num_fields($rs); $i++) {
-        print "<td>";
-        print mysql_field_name($rs, $i);
-	print "</td>";
-    }
-    print "</tr>";
+    # Updating the max ID
+    $updateMaxIDquery = "UPDATE MaxPersonID SET id=id+1";
+    $updateMaxID = mysql_query($updateMaxIDquery, $db_connection);
 
-    while ($row = mysql_fetch_row($rs)) {
-      print "<tr align=center>";
-      foreach ($row as $rv) {
-        print "<td>";
-	if ($rv == "") {
-	  print "N/A";
-	} else {
-	  print $rv;
-	}
-	print "</td>";
-      }
-      print "</tr>";
+    if ($actDir == "Actor") {
+      $insert_query = "INSERT INTO Actor VALUES($newID, '$last', '$first', '$sex', $dob, $dod)";
     }
-    print "</table>";
+    else if ($actDir == "Director") {
+      $insert_query = "INSERT INTO Director VALUES($newID, '$last', '$first', $dob, $dod)";
+    }
+    print "$insert_query <br>";
+    $insertDB = mysql_query($insert_query, $db_connection);
+    if (!$insertDB) {
+      $error = mysql_error();
+      $updateMaxIDquery = "UPDATE MaxPersonID SET id=id-1";
+      $updateMaxID = mysql_query($updateMaxIDquery, $db_connection);
+      die("Invalid query: $error");
+    }
+
     mysql_close($db_connection);
   }
 
