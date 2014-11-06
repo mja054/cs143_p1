@@ -1,8 +1,8 @@
 <DOCTYPE html>
 <html>
-<title> CS143 Project 1b </title>
+<title> Add a Movie Review! </title>
 <body>
-<h1>Type an SQL query in the following box</h1>
+<h1>Add a movie review!</h1>
 
 <?php
 ?>

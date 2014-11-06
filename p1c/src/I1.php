@@ -1,8 +1,8 @@
 <DOCTYPE html>
 <html>
-<title> CS143 Project 1b </title>
+<title> New Actor/Director Submission </title>
 <body>
-<h1>Type an SQL query in the following box</h1>
+<h1>Add a new actor or director here!</h1>
 
 <?php
 ?>
