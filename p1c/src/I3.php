@@ -28,7 +28,6 @@
 </form>
 
 <?php
-  # include "db_base.php";
   function execute_command()
   {
     $reviewer = $_GET["name"];
@@ -45,12 +44,6 @@
     while ($row = $db_con->fetch_row($queryMovie)) {
       $movie = $row[0];
     }
-    print "$reviewer<br>";
-    print "$mid<br>";
-    print "$movie<br>";
-    print "$currTime<br>";
-    print "$rating<br>";
-    print "$comment<br>";
 
     $addReviewQuery = "INSERT INTO Review VALUES('$reviewer', $currTime, $mid, $rating, '$comment'";
     $insertDB = $db_con->execute_command($addReviewQuery);
