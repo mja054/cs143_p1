@@ -12,7 +12,9 @@
     $actorQuery = "SELECT id, last, first FROM Actor";
     $queryActors = $db_con->execute_command($actorQuery);
     while ($row = $db_con->fetch_row($queryActors)) {
-      print "<option value=$row[0]>$row[1], $row[2]</option>\n";
+      print "<option ";
+      if ($_GET["actor"] == "$row[0]") {echo 'selected="true"';}
+      print "value=$row[0]>$row[1], $row[2]</option>\n";
     }
     $db_con->close_db();
     ?>
@@ -23,7 +25,9 @@
     $movieQuery = "SELECT id, title FROM Movie";
     $queryMovies = $db_con->execute_command($movieQuery);
     while ($row = $db_con->fetch_row($queryMovies)) {
-      print "<option value=$row[0]>$row[1]</option>\n";
+      print "<option ";
+      if ($_GET["movie"] == "$row[0]") {echo 'selected="true"';}
+      print "value=$row[0]>$row[1]</option>\n";
     }
     $db_con->close_db();
   ?>
