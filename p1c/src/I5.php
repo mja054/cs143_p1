@@ -1,68 +1,71 @@
 <DOCTYPE html>
 <html>
-<title> CS143 Project 1b </title>
+<title> New Director to Movie Submission </title>
 <body>
-<h1>Type an SQL query in the following box</h1>
+<h1>Add a director to a movie here!</h1>
 
-<?php
-?>
-
-<form action="query.php" method="GET">
-<textarea name="query" rows="8" cols="60"><?php echo $_GET["query"];?></textarea>
-<input type = "submit" name = "submit">
+<form action="I5.php" method="GET">
+  Director: <select name="director">
+  <?php
+    include "db_base.php";
+    $db_con = new dbConnect();
+    $directorQuery = "SELECT id, last, first FROM Director";
+    $queryDirectors = $db_con->execute_command($directorQuery);
+    while ($row = $db_con->fetch_row($queryDirectors)) {
+      print "<option value=$row[0]>$row[1], $row[2]</option>\n";
+    }
+    $db_con->close_db();
+    ?>
+  </select><br>
+  Movie: <select name="movie">
+  <?php
+    $db_con = new dbConnect();
+    $movieQuery = "SELECT id, title FROM Movie";
+    $queryMovies = $db_con->execute_command($movieQuery);
+    while ($row = $db_con->fetch_row($queryMovies)) {
+      print "<option value=$row[0]>$row[1]</option>\n";
+    }
+    $db_con->close_db();
+  ?>
+  </select><br>
+  <input type = "submit" name = "submit">
 </form>
 
 <?php
-  function connectDB()
-  {
-    $db_connection = mysql_connect("localhost","cs143", "");
-    mysql_select_db("CS143", $db_connection);
-    return $db_connection;
-  }
-
   function execute_command()
   {
-    $input_pattern = '/^(select|show)/i';
-    $user_query = $_GET["query"];
+    $mid = $_GET["movie"];
+    $did = $_GET["director"];
 
-    if ($user_query == '') {
-      die();
-    } else if (!preg_match($input_pattern, $user_query)) {
-      die('<h4>Only select/show commands are supported.</h4>');
+    $db_con = new dbConnect();
+
+    # Obtaining the movie title from the mid
+    $movieQuery = "SELECT title FROM Movie WHERE id=$mid";
+    $queryMovie = $db_con->execute_command($movieQuery);
+    while ($row = $db_con->fetch_row($queryMovie)) {
+      $movie = $row[0];
     }
 
-    $db_connection = connectDB();
-
-    $rs = mysql_query($user_query, $db_connection);
-    if (!$rs) {
-       die('<h4>Invalid query: ' . mysql_error() . '</h4>');
+    # Obtaining the director name from the did
+    $directorQuery = "SELECT last, first FROM Director WHERE id=$did";
+    $queryDirector = $db_con->execute_command($directorQuery);
+    while ($row = $db_con->fetch_row($queryDirector)) {
+      $director_last = $row[0];
+      $director_first = $row[1];
     }
 
-    print "<h3>Results from MySQL:</h3>";
-    print "<table border=1 cellspacing=1 cellpadding=2>";
-    print "<tr align=center>";
-    for ($i = 0; $i < mysql_num_fields($rs); $i++) {
-        print "<td>";
-        print mysql_field_name($rs, $i);
-	print "</td>";
-    }
-    print "</tr>";
+    $addDirectorQuery = "INSERT INTO MovieDirector VALUES($mid, $did)";
+    $insertDB = $db_con->execute_command($addDirectorQuery);
 
-    while ($row = mysql_fetch_row($rs)) {
-      print "<tr align=center>";
-      foreach ($row as $rv) {
-        print "<td>";
-	if ($rv == "") {
-	  print "N/A";
-	} else {
-	  print $rv;
-	}
-	print "</td>";
-      }
-      print "</tr>";
+    if (!$insertDB) {
+      $error = mysql_error();
+      die("Invalid query: $error");
     }
-    print "</table>";
-    mysql_close($db_connection);
+    else {
+      print "Successfully inserted $director_first $director_last into $movie!";
+    }
+
+    $db_con->close_db();
   }
 
   if (isset($_GET["submit"])) {
