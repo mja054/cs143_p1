@@ -108,45 +108,46 @@ Genre :<br />
 
     function execute_command()
     {
-/*
 	$db_con = new dbConnect();
-	$rs = $db_con->execute_command($user_query);
-	if (!$rs) {
-	    die('<h4>Invalid query: ' . mysql_error() . '</h4>');
+
+	# Obtaining the current max ID
+	$newIDquery = "SELECT id FROM MaxMovieID";
+	$queryMaxID = $db_con->execute_command($newIDquery);
+	while ($row = $db_con->fetch_row($queryMaxID)) {
+	  $newID = $row[0];
 	}
 
-	print "<h3>Results from MySQL:</h3>";
-	print "<table border=1 cellspacing=1 cellpadding=2>";
-	print "<tr align=center>";
-	for ($i = 0; $i < $db_con->get_num_fields($rs); $i++) {
-	    print "<td>";
-	    print $db_con->get_field_name($rs, $i);
-	    print "</td>";
-	}
-	print "</tr>";
+	# Updating the max ID
+	$updateMaxIDquery = "UPDATE MaxMovieID SET id=id+1";
+	$updateMaxID = $db_con->execute_command($updateMaxIDquery);
 
-	while ($row = $db_con->fetch_row($rs)) {
-	    print "<tr align=center>";
-	    foreach ($row as $rv) {
-		print "<td>";
-		if ($rv == "") {
-		    print "N/A";
-		} else {
-		    print $rv;
-		}
-		print "</td>";
-	    }
-	    print "</tr>";
+	$insert_query = "INSERT INTO Movie VALUES($newID, '$this->title',
+			  '$this->year', '$this->mpaa_rating',
+			  '$this->company')";
+	
+	$insertDB = $db_con->execute_command($insert_query);
+	if (!$insertDB) {
+	  $error = mysql_error();
+	  $updateMaxIDquery = "UPDATE MaxMovieID SET id=id-1";
+	  $updateMaxID = $db_con->execute_command($updateMaxIDquery);
+	  die("Invalid query: $error");
 	}
-	print "</table>";
-*/
+
+	$movieGenre = $this->movieGenre;
+	for($i = 0; $i < count($movieGenre); $i++) {
+	  $genre = $movieGenre[$i];
+	  $insert_query = "INSERT INTO MovieGenre VALUES($newID, '$genre')";
+	  $db_con->execute_command($insert_query);
+	}
+	print "Successfully inserted $newID $this->title $this->company into the movie database!";
+        $db_con->close_db();
     }
   }
 
   if (isset($_GET["submit"])) {
      $movieObj = new add_movie();
      $movieObj->parse_and_validate();
-//     $movieObj->debug_input();
+//   $movieObj->debug_input();
      $movieObj->execute_command();
   }
 ?>
