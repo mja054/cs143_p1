@@ -35,11 +35,9 @@
 <?php
   function execute_command()
   {
-    $reviewer = $_GET["name"];
-    $currTime = date('Y-m-d');
     $mid = $_GET["movie"];
-    $rating = $_GET["rating"];
-    $comment = $_GET["comment"];
+    $aid = $_GET["actor"];
+    $role = $_GET["role"];
 
     $db_con = new dbConnect();
 
@@ -49,22 +47,24 @@
     while ($row = $db_con->fetch_row($queryMovie)) {
       $movie = $row[0];
     }
-    print "$reviewer<br>";
-    print "$mid<br>";
-    print "$movie<br>";
-    print "$currTime<br>";
-    print "$rating<br>";
-    print "$comment<br>";
 
-    $addReviewQuery = "INSERT INTO Review VALUES('$reviewer', $currTime, $mid, $rating, '$comment'";
-    $insertDB = $db_con->execute_command($addReviewQuery);
+    # Obtaining the actor name from the aid
+    $actorQuery = "SELECT last, first FROM Actor WHERE id=$aid";
+    $queryActor = $db_con->execute_command($actorQuery);
+    while ($row = $db_con->fetch_row($queryActor)) {
+      $actor_last = $row[0];
+      $actor_first = $row[1];
+    }
+
+    $addActorQuery = "INSERT INTO MovieActor VALUES($mid, $aid, '$role')";
+    $insertDB = $db_con->execute_command($addActorQuery);
 
     if (!$insertDB) {
       $error = mysql_error();
       die("Invalid query: $error");
     }
     else {
-      print "Successfully inserted review for $movie from $reviewer into the Review database!";
+      print "Successfully inserted $actor_first $actor_last into $movie!";
     }
 
     $db_con->close_db();
