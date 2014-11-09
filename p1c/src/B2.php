@@ -1,71 +1,56 @@
 <DOCTYPE html>
 <html>
-<title> CS143 Project 1b </title>
+<title> Movie Information </title>
 <body>
-<h1>Type an SQL query in the following box</h1>
 
-<?php
-?>
-
-<form action="query.php" method="GET">
-<textarea name="query" rows="8" cols="60"><?php echo $_GET["query"];?></textarea>
-<input type = "submit" name = "submit">
+<form action="search.php" method="GET">
+  <textarea name="query" rows="1" cols="40"><?php echo $_GET["query"];?></textarea>
+  <br />
+  <input type = "radio" name="type" value="actor">Actor
+  <input type = "radio" name="type" value="actress">Actress
+  <input type = "radio" name="type" value="movie">movie
+  <br />
+  <input type = "submit" name = "submit" value="search">
+  <br />
 </form>
-
 <?php
-  function connectDB()
+  include "db_base.php";
+
+  function print_actor_list($db_con, $Ares)
   {
-    $db_connection = mysql_connect("localhost","cs143", "");
-    mysql_select_db("CS143", $db_connection);
-    return $db_connection;
+    $i = 0;
+    echo "<table>";
+    echo "<tbody>";
+    while ($row = $db_con->fetch_row($Ares)) {
+      echo "<tr><td><a href=\"./B1.php?id=".$row[0]."\">".$row[1]." ".$row[2]." (".$row[3].")</a></td></tr>";
+      $i = $i+1;
+    }
+    echo "</tbody></table>";
+    return $i;
   }
 
+  function search_actor_info($db_con, $aid)
+  {
+    $q1 = "Select id,first,last,dob,dod from Actor where id=".$aid;
+
+    $Aresult = $db_con->execute_command($q1) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
+    $result_q3 = print_actor_list($db_con, $Aresult);
+
+    return (result_q3) ? true : false;
+  }
   function execute_command()
   {
-    $input_pattern = '/^(select|show)/i';
-    $user_query = $_GET["query"];
-
-    if ($user_query == '') {
-      die();
-    } else if (!preg_match($input_pattern, $user_query)) {
-      die('<h4>Only select/show commands are supported.</h4>');
+    $mid = $_GET["id"];
+    $db_con = new dbConnect();
+    $query = "SELECT aid FROM MovieActor WHERE mid=".$mid;
+    $res = $db_con->execute_command($query) or die("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
+    while($row=$db_con->fetch_row($res)) {
+      search_actor_info($db_con, $row[0]);
     }
-
-    $db_connection = connectDB();
-
-    $rs = mysql_query($user_query, $db_connection);
-    if (!$rs) {
-       die('<h4>Invalid query: ' . mysql_error() . '</h4>');
-    }
-
-    print "<h3>Results from MySQL:</h3>";
-    print "<table border=1 cellspacing=1 cellpadding=2>";
-    print "<tr align=center>";
-    for ($i = 0; $i < mysql_num_fields($rs); $i++) {
-        print "<td>";
-        print mysql_field_name($rs, $i);
-	print "</td>";
-    }
-    print "</tr>";
-
-    while ($row = mysql_fetch_row($rs)) {
-      print "<tr align=center>";
-      foreach ($row as $rv) {
-        print "<td>";
-	if ($rv == "") {
-	  print "N/A";
-	} else {
-	  print $rv;
-	}
-	print "</td>";
-      }
-      print "</tr>";
-    }
-    print "</table>";
-    mysql_close($db_connection);
+    $db_con->close_db();
   }
 
-  if (isset($_GET["submit"])) {
+  if (isset($_GET["id"])) {
      execute_command();
   }
 ?>
