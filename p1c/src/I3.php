@@ -33,7 +33,7 @@
   function execute_command()
   {
     $reviewer = $_GET["name"];
-    $currTime = date('Y-m-d');
+    # $currTime = now(); # date('Y-m-d');
     $mid = $_GET["movie"];
     $rating = $_GET["rating"];
     $comment = $_GET["comment"];
@@ -47,7 +47,7 @@
       $movie = $row[0];
     }
 
-    $addReviewQuery = "INSERT INTO Review VALUES('$reviewer', $currTime, $mid, $rating, '$comment'";
+    $addReviewQuery = "INSERT INTO Review(name, mid, rating, comment) VALUES('$reviewer', $mid, $rating, '$comment')";
     $insertDB = $db_con->execute_command($addReviewQuery);
 
     if (!$insertDB) {

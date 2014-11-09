@@ -65,7 +65,7 @@ CREATE TABLE MovieActor (
 
 CREATE TABLE Review (
 	name varchar(20), 
-	time timestamp, 
+	time timestamp DEFAULT CURRENT_TIMESTAMP, 
 	mid int, 
 	rating int, 
 	comment varchar(500),
