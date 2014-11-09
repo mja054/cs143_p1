@@ -5,7 +5,6 @@ class dbConnect {
       {
 	  $this->db_connection = mysql_connect("localhost","cs143", "");
 	  mysql_select_db("CS143", $this->db_connection);
-	  return $db_connection;
        }
 
        function execute_command($command)
@@ -22,6 +21,11 @@ class dbConnect {
        function get_field_name($rs, $index)
        {
            return mysql_field_name($rs, $index);
+       }
+
+       function get_num_rows($rs)
+       {
+	   return mysql_num_rows($rs);
        }
 
        function fetch_row($rs)

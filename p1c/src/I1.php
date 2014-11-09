@@ -69,7 +69,7 @@ Please select one:
       die("Invalid query: $error");
     }
     else {
-      print "Successfully inserted $first $last into the $actDir database!";
+      print "Successfully inserted $newID $first $last into the $actDir database!";
     }
 
     $db_con->close_db();
