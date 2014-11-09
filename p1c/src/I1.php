@@ -36,6 +36,12 @@ Please select one:
 
     $db_con = new dbConnect();
 
+    # Checking if person exists in either table first
+    $checkDirQuery = "SELECT id FROM Director WHERE first=$first AND last=$last AND dob=$dob";
+    $queryCheckDirExists = $db_con->execute_command($checkDirQuery);
+    $checkActQuery = "SELECT id FROM Actor WHERE first=$first AND last=$last AND dob=$dob";
+    $queryCheckActExists = $db_con->execute_command($checkActQuery);
+
     # Obtaining the current max ID
     $newIDquery = "SELECT id FROM MaxPersonID";
     $queryMaxID = $db_con->execute_command($newIDquery);
@@ -53,7 +59,7 @@ Please select one:
     else if ($actDir == "Director") {
       $insert_query = "INSERT INTO Director VALUES($newID, '$last', '$first', $dob, $dod)";
     }
-    
+
     $insertDB = $db_con->execute_command($insert_query);
 
     if (!$insertDB) {
