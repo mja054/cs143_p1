@@ -2,23 +2,32 @@
 <html>
 <title> CS143 Project 1b </title>
 <body>
-<h1>Type an SQL query in the following box</h1>
 
-<form action="B1.php" method="GET">
-<textarea name="query" rows="8" cols="60"><?php echo $_GET["query"];?></textarea>
-<input type = "submit" name = "submit">
+<form action="search.php" method="GET">
+  <textarea name="query" rows="1" cols="40"><?php echo $_GET["query"];?></textarea>
+  <br />
+  <input type = "radio" name="type" value="actor">Actor
+  <input type = "radio" name="type" value="actress">Actress
+  <input type = "radio" name="type" value="movie">movie
+  <br />
+  <input type = "submit" name = "submit" value="search">
+  <br />
 </form>
-
 <?php
-
+  include "db_base.php";
   function execute_command()
   {
-foreach ($_SERVER as $key=>$val ){
-echo $key . " = " . $val . "<br />";
-}
+    $aid = $_GET["id"];
+    $db_con = new dbConnect();
+    $query = "SELECT mid FROM MovieActor WHERE aid=".$aid;
+    $res = $db_con->execute_command($query) or die("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
+    while($row=$db_con->fetch_row($res)) {
+      echo $row[0] . "<br />";
+    }
+    $db_con->close_db();
   }
 
-  if (isset($_GET["submit"])) {
+  if (isset($_GET["id"])) {
      execute_command();
   }
 ?>

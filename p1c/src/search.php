@@ -74,13 +74,6 @@
     return $i;
   }
 
-  function connectDB()
-  {
-    $db_connection = mysql_connect("localhost","cs143", "");
-    mysql_select_db("CS143", $db_connection);
-    return $db_connection;
-  }
-
   function search_movie_info($keywords)
   {
     $mq1 = "select id,title,year from Movie where title like '%".$keywords."%'";
