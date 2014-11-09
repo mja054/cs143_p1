@@ -21,10 +21,11 @@
   function print_actor_list($db_con, $Ares)
   {
     $i = 0;
+    echo "Names:<br />";
     echo "<table>";
     echo "<tbody>";
     while ($row = $db_con->fetch_row($Ares)) {
-      echo "<tr><td><a href=\"./B1.php?id=".$row[0].">".$row[1]." ".$row[2]." (".$row[3].")</a></td></tr>";
+      echo "<tr><td><a href=\"./B1.php?id=".$row[0]."\">".$row[1]." ".$row[2]." (".$row[3].")</a></td></tr>";
       $i = $i+1;
     }
     echo "</tbody></table>";
@@ -46,45 +47,48 @@
     }
     $db_con = new dbConnect();
 
-    $Aresult = $db_con->execute_command($q1) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
-    $result_q1 = print_actor_list($db_con, $Aresult);
+#   $Aresult = $db_con->execute_command($q1) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
+#   $result_q1 = print_actor_list($db_con, $Aresult);
 
-    $Aresult = $db_con->execute_command($q2) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
-    $result_q2 = print_actor_list($db_con, $Aresult);
+#   $Aresult = $db_con->execute_command($q2) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
+#   $result_q2 = print_actor_list($db_con, $Aresult);
 
     $Aresult = $db_con->execute_command($q3) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
     $result_q3 = print_actor_list($db_con, $Aresult);
 
     $db_con->close_db();
-    return (result_q1 || result_q2 || result_q3) ? true : false;
+    return (result_q3) ? true : false;
   }
 
   function print_movie_list($db_con, $Mres)
   {
     $i = 0;
+    echo "<br />Movies:<br />"; 
     echo "<table>";
     echo "<tbody>";
-    $mrow = mysql_fetch_row($Mres);
-    while ($mrow) {
-      echo "<tr><td><a href=\"./B2.php?id=".$mrow[0].">".$mrow[1]." (".$mrow[2].")</a></td></tr>";
-      $mrow = mysql_fetch_row($Mres);
+    while ($mrow = mysql_fetch_row($Mres)) {
+      echo "<tr><td><a href=\"./B2.php?id=".$mrow[0]."\">".$mrow[1]." (".$mrow[2].")</a></td></tr>";
       $i = $i+1;
     }
     echo "</tbody></table>";
     return $i;
   }
 
+  function connectDB()
+  {
+    $db_connection = mysql_connect("localhost","cs143", "");
+    mysql_select_db("CS143", $db_connection);
+    return $db_connection;
+  }
+
   function search_movie_info($keywords)
   {
-    $q1 = "select id,title,year from Movie where title like '%".$keywords."%'";
+    $mq1 = "select id,title,year from Movie where title like '%".$keywords."%'";
 
-#   $db_con = new dbConnect();
-    $db_con = mysql_connect("localhost","cs143", "");
-    mysql_select_db("CS143", $db_con);
-    $Mresult = mysql_query($q1, $db_con) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
-    echo $q1 . " " . mysql_num_rows($Mresult) . " <br />";
-    $result_q = print_movie_list($db_con, $Mresult);
-    mysql_close($db_con);
+    $db_con = new dbConnect();
+    $Mresult = $db_con->execute_command($mq1) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
+    $result_q = print_movie_list($db_conn, $Mresult);
+    $db_con->close_db();
     return $result_q ? true : false;
   }
 
