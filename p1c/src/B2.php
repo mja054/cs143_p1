@@ -42,7 +42,7 @@
   function print_director($db_con, $did)
   {
     $mq1 = "Select first,last from Director where id=".$did;
-    $Mresult = $db_con->execute_command($mq1) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
+    $Mresult = $db_con->execute_command($mq1) or die ("<h3>" . mysql_errno() . ": while retrieving director information from director table did=" . $did . ".::" . mysql_error() . "</h3>");
     $drow = $db_con->fetch_row($Mresult);
     echo "Director: " . $drow[0] . " " . $drow[1] . "<br />";
   }
@@ -50,8 +50,12 @@
   function print_movie_director($db_con, $mid)
   {
     $mq1 = "select did from MovieDirector where mid=".$mid;
-    $Mresult = $db_con->execute_command($mq1) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
+    $Mresult = $db_con->execute_command($mq1) or die ("<h3>" . mysql_errno() . ": while fetching director id from movie id::" . mysql_error() . "</h3>");
     $mdrow = $db_con->fetch_row($Mresult);
+    if ($mdrow[0] == '') {
+      echo "Director information not available.<br />";
+      return;
+    }
     print_director($db_con, $mdrow[0]);
   }
 
