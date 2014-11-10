@@ -62,7 +62,7 @@
     search_actor_info($db_con, $aid);
     $query = "SELECT mid FROM MovieActor WHERE aid=".$aid;
     $res = $db_con->execute_command($query) or die("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
-    echo "<br /> Acted in the follwing movies<br />";
+    echo "<br /> Acted in the following movies<br />";
     while($row=$db_con->fetch_row($res)) {
       search_movie_info($db_con, $row[0]);
     }

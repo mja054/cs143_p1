@@ -90,7 +90,7 @@
 
     $Mresult = $db_con->execute_command($mq1) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
     $row = $db_con->fetch_row($Mresult);
-    echo "Average rating: " . $gow[0] . " by " . $row[1] . " users";
+    echo "Average rating: " . $row[0] . " by " . $row[1] . " users<br>";
   }
 
   function print_movie_review($db_con, $mid)
@@ -102,7 +102,7 @@
 
     $Mresult = $db_con->execute_command($mq1) or die ("<h3>" . mysql_errno() . " : " . mysql_error() . "</h3>");
     while($row = $db_con->fetch_row($Mresult)) {
-      echo "In " + $row[0] . ", " . $row[1] . " rates this movie " . $row[2] . "<br />";
+      echo "In " . $row[0] . ", " . $row[1] . " rates this movie " . $row[2] . "<br />";
       echo "Comment: '" . $row[3] . "'<br />";
     }
   }
