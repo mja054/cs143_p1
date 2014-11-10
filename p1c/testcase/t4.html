@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://192.168.56.20/~cs143/cs143_p1/p1c/src/movie.html" />
-<title>t2</title>
+<title>t4</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">t2</td></tr>
+<tr><td rowspan="1" colspan="3">t4</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -23,7 +23,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Add Actor/Director</td>
+	<td>link=Add Comments to Movie</td>
 	<td></td>
 </tr>
 <tr>
@@ -32,39 +32,24 @@
 	<td></td>
 </tr>
 <tr>
+	<td>type</td>
+	<td>name=name</td>
+	<td>Spencer</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>name=movie</td>
+	<td>label=CS143</td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>name=actDir</td>
+	<td>xpath=(//input[@name='rating'])[5]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>name=first</td>
-	<td>Happy</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=last</td>
-	<td>Jack</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>name=sex</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=dob-y</td>
-	<td>1994</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=dob-m</td>
-	<td>10</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=dob-d</td>
-	<td>10</td>
+	<td>name=comment</td>
+	<td>very good</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -72,58 +57,53 @@
 	<td></td>
 </tr>
 <tr>
+	<td>type</td>
+	<td>name=name</td>
+	<td>Tung</td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>xpath=(//input[@name='actDir'])[2]</td>
+	<td>xpath=(//input[@name='rating'])[4]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>name=first</td>
-	<td>Mary</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=last</td>
-	<td>Queen</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>xpath=(//input[@name='sex'])[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=dob-y</td>
-	<td>1977</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=dob-m</td>
-	<td>02</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=dob-d</td>
-	<td>27</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=dod-y</td>
-	<td>2012</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=dod-m</td>
-	<td>12</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>name=dod-d</td>
-	<td>31</td>
+	<td>name=comment</td>
+	<td>excellent</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>name=submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>name=dir</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Search Actor/Movie</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>name=main</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=query</td>
+	<td>CS143</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=CS143 (2013)</td>
 	<td></td>
 </tr>
 

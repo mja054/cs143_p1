@@ -42,7 +42,7 @@ Please select one:
       $dobm = "0" . $dobm;
     if (strlen($dobd) == 1)
       $dobd = "0" . $dobd;
-    $dob = $doby . "-" . $dobm . "-" . $dobd;
+    $dob = $doby . $dobm . $dobd;
 
     # If dod is empty, we assume the person is still alive
     if ($dody == "" || $dodm == "" || $dodd == "") {
@@ -52,7 +52,7 @@ Please select one:
         $dodm = "0" . $dodm;
       if (strlen($dodm) == 1)
         $dodd = "0" . $dodd;
-      $dod = $dody . "-" . $dodm . "-" . $dodd;
+      $dod = $dody . $dodm . $dodd;
     }
 
     $db_con = new dbConnect();
@@ -65,8 +65,8 @@ Please select one:
     }
 
     if ($alreadyExists > 0) {
-      $db_con->close_db();
       print "Person already exists as an $actDir!";
+      $db_con->close_db();
       return;
     }
 
