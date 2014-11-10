@@ -12,8 +12,12 @@ Please select one:
   Last name: <textarea name="last" rows="1" cols="6"><?php echo $_GET["last"];?></textarea><br>
   Male <input type="radio" name="sex" value="Male" <?php if($_GET["sex"] == "Male") {echo 'checked="checked"';} ?>>
   Female <input type="radio" name="sex" value="Female" <?php if($_GET["sex"] == "Female") {echo 'checked="checked"';} ?>> <br>
-  Date of Birth: <textarea name="dob" rows="1" cols="6"><?php echo $_GET["dob"];?></textarea>
-  Date of Death: <textarea name="dod" rows="1" cols="6"><?php echo $_GET["dod"];?></textarea><br>
+  Date of Birth (Numeric input only): Year <textarea name="dob-y" rows="1" cols="6"><?php echo $_GET["dob-y"];?></textarea>
+  Month <textarea name="dob-m" rows="1" cols="6"><?php echo $_GET["dob-m"];?></textarea>
+  Day <textarea name="dob-d" rows="1" cols="6"><?php echo $_GET["dob-d"];?></textarea><br>
+  Date of Death (Numeric input only): Year <textarea name="dod-y" rows="1" cols="6"><?php echo $_GET["dod-y"];?></textarea>
+  Month <textarea name="dod-m" rows="1" cols="6"><?php echo $_GET["dod-m"];?></textarea>
+  Day <textarea name="dod-d" rows="1" cols="6"><?php echo $_GET["dod-d"];?></textarea><br>
   <input type = "submit" name = "submit">
 </form>
 
@@ -26,21 +30,45 @@ Please select one:
     $first = $_GET["first"];
     $last = $_GET["last"];
     $sex = $_GET["sex"];
-    $dob = $_GET["dob"];
-    $dod = $_GET["dod"];
+    $doby = $_GET["dob-y"];
+    $dobm = $_GET["dob-m"];
+    $dobd = $_GET["dob-d"];
+    $dody = $_GET["dod-y"];
+    $dodm = $_GET["dod-m"];
+    $dodd = $_GET["dod-d"];
+
+    # In case of single MM or DD
+    if (strlen($dobm) == 1)
+      $dobm = "0" . $dobm;
+    if (strlen($dobd) == 1)
+      $dobd = "0" . $dobd;
+    $dob = $doby . "-" . $dobm . "-" . $dobd;
 
     # If dod is empty, we assume the person is still alive
-    if ($dod == "") {
+    if ($dody == "" || $dodm == "" || $dodd == "") {
       $dod = "NULL";
+    } else {
+      if (strlen($dodm) == 1)
+        $dodm = "0" . $dodm;
+      if (strlen($dodm) == 1)
+        $dodd = "0" . $dodd;
+      $dod = $dody . "-" . $dodm . "-" . $dodd;
     }
 
     $db_con = new dbConnect();
 
     # Checking if person exists in either table first
-    $checkDirQuery = "SELECT id FROM Director WHERE first=$first AND last=$last AND dob=$dob";
-    $queryCheckDirExists = $db_con->execute_command($checkDirQuery);
-    $checkActQuery = "SELECT id FROM Actor WHERE first=$first AND last=$last AND dob=$dob";
-    $queryCheckActExists = $db_con->execute_command($checkActQuery);
+    $checkExistsQuery = "SELECT id FROM $actDir WHERE first='$first' AND last='$last' AND dob='$dob'";
+    $queryCheckExists = $db_con->execute_command($checkExistsQuery);
+    while ($row = $db_con->fetch_row($queryCheckExists)) {
+      $alreadyExists = $row[0];
+    }
+
+    if ($alreadyExists > 0) {
+      $db_con->close_db();
+      print "Person already exists as an $actDir!";
+      return;
+    }
 
     # Obtaining the current max ID
     $newIDquery = "SELECT id FROM MaxPersonID";
